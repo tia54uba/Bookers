@@ -5,10 +5,14 @@ class BooksController < ApplicationController
     # １.&2. データを受け取り新規登録するためのインスタンス作成
     @book = Book.new(book_params)
     # 3. データをデータベースに保存するためのsaveメソッド実行
-    @book.save
+  if  @book.save
+    flash[:complete] = "successfully"
     # 4. 詳細画面へリダイレクト
     redirect_to "/books/#{@book.id}"
     #book_path(@book)
+  else 
+    render :index
+  end
   end
 
 
@@ -27,14 +31,22 @@ class BooksController < ApplicationController
 
   def update
     book = Book.find(params[:id])
-    book.update(book_params)
+    if book.update(book_params)
+      flash[:complete] = "successfully"
     redirect_to book_path(book.id)  
+    else 
+    render :index
+    end
   end
 
   def destroy
     book = Book.find(params[:id])  
-    book.destroy  
-    redirect_to books_path
+    if book.destroy
+     flash[:complete] = "successfully"
+      redirect_to books_path
+    else 
+      render:index
+    end
   end
 
 
